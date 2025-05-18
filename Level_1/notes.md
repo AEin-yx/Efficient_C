@@ -55,4 +55,62 @@ int atexit(void (*handler)(void));
 
 - This is more traditional but neutral — it doesn’t say whether `handler` can be `NULL`.
 
-✅ The first version gives **extra meaning**: it tells the reader and compiler **this function pointer is guaranteed to be valid**.
+✅ The first version gives **extra meaning**: it tells the reader and compiler **this function pointer is guaranteed to be valid**.  
+```c
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(int argc,char* argv[argc+1]){
+    puts("Hello World");
+    if(argc>1){
+        while(true){
+            puts("some program never stop");
+        }
+    } else {
+        do{
+            puts("but this one does");
+        }while(false);
+    }
+    return EXIT_SUCCESS;
+}
+```
+
+> The feature int main(int argc, char* argv[argc+1]) is a special case.
+> 
+
+🔑 **Yes** — this is special to `main`.
+
+- Normally in C, **function parameters** can't use *other parameters* in their type declarations.
+- But **C99** introduced a feature called **"Variable Length Arrays" (VLA)** that makes this legal **only in some cases**, like with `main()`.
+
+`char* argv[argc+1];`  instead of argc=null, we say argc+1=null  
+
+### `char* argv[]` is an Array of Strings
+
+> a collection of characters is a string, and since we have no string type in C, we use char* to emulate it.
+> 
+
+```c
+gcc -Wall -o style style.c -lm
+
+./style  
+// Hello World
+// but this one does
+./style hello world  
+// here argc=3 argv[0]=./style argv[1]=hello argv[2]=world argv[3]=null
+// some program never stop
+// some program never stop 
+// some program never stop...
+
+```
+
+Use puts to get a newline+printing but if we were to cmbine string and integers we use printf
+
+🔥 Summary
+
+| Statement | Is it True? |
+| --- | --- |
+| `argv[argc]` is `NULL` | ✅ Yes, always (required by the standard) |
+| `argv[argc+1]` is valid to access | ❌ No — it's out-of-bounds |
+| Writing `argv[argc+1]` changes the behavior | ❌ No — it's just a declaration style, not a functional change |
+| `argv[argc+1]` is a C99 feature | ✅ Yes — depends on support for VLAs |
