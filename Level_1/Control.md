@@ -311,3 +311,52 @@ for (size_t i = 9; i <= 9; --i) {
 - It depends on **unsigned integer wraparound**, which is **well-defined in C** — but not always good for clarity.
 - This might be used in **low-level performance-critical** code (e.g., a loop unrolling trick or bit manipulation).
 - But it’s also **hard to read**, and **easy to mess up**.
+### Heron approximation to find inverse of x $(1/x)$
+
+### **How You *Can* Build Intuition for It**
+
+### **Step 1: Realize Division is Equivalent to Reciprocal + Multiplication**
+
+Instead of computing **`1/a`** directly, think:
+
+- *"What number **`x`** makes **`a * x = 1`**?"*
+- Now it’s a **root-finding problem**: solve **`f(x) = a * x - 1 = 0`**.
+
+### **Step 2: Newton’s Method for Root-Finding**
+
+Newton’s method says:
+
+- Start with a guess **`x₀`**.
+- Improve the guess using: $x_{n+1}=x_n+\frac{f(x_n)}{f'(x_n)}$
+- For **`f(x) = a * x - 1`**, the derivative is **`f'(x) = a`**.
+- Plugging in: $x_{n+1}=x_n-\frac{ax_n-1}{a}=1/a$
+    
+    **Wait, this gives the exact solution immediately!** That’s no good—it still requires division by **`a`** (which we’re trying to avoid).
+    
+
+### **Step 3: Smarter Choice of `f(x)`**
+
+Instead, use:
+
+$f(x) = \frac{1}{x} - a$
+
+- Now, the derivative is **`f'(x) = -1/x²`**.
+- Newton’s update becomes:  
+   $x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} = x_n - \frac{\frac{1}{x_n} - a}{-\frac{1}{x_n^2}}$ $= x_n + x_n \left(1 - a x_n \right) = x_n (2 - a x_n)$
+    
+    **This is the Heron update rule!**
+    
+No division needed, just multiplications and subtractions.
+
+### **Step 4: Why This Works**
+
+- Each iteration **squares the error**, so convergence is **extremely fast**.
+- Example: Computing **`1/34`** (from the code):
+    - Start with **`x₀ = 0.5`** (guess).
+    - Next guess: **`x₁ = 0.5 * (2 - 34 * 0.5) = 0.5 * (2 - 17) = -7.5`** (Oops, overshoot!)
+    - But subsequent iterations stabilize quickly:
+        - **`x₂ = -7.5 * (2 - 34 * -7.5) ≈ -7.5 * 257 ≈ -1927.5`** (diverges!)
+    - **Problem:** The initial guess was bad. A better guess (like **`x₀ = 0.02`**) works:
+        - **`x₁ = 0.02 * (2 - 34 * 0.02) ≈ 0.02 * (2 - 0.68) ≈ 0.0264`**
+        - **`x₂ ≈ 0.0264 * (2 - 34 * 0.0264) ≈ 0.0292`**
+        - Converges to **`~0.02941176`** (which is **`1/34`**).
