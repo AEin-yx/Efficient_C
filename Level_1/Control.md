@@ -361,7 +361,7 @@ No division needed, just multiplications and subtractions.
         - **`x₂ ≈ 0.0264 * (2 - 34 * 0.0264) ≈ 0.0292`**
         - Converges to **`~0.02941176`** (which is **`1/34`**).
 ### Heron Approximation using a while loop with a condition
-```
+```c
 # include <stdlib.h>
 # include <stdio.h>
 # include <tgmath.h>
@@ -374,6 +374,47 @@ int main(void){
         x*=2.0-a*x;
     }
     printf("The Approximation of %f is %.10f",a,x);
+    return EXIT_SUCCESS;
+}
+```
+Do While Loop with a condition
+
+```c
+# include <stdio.h>
+# include <stdlib.h>
+# include <tgmath.h>
+
+int main(void){
+    double a=33;
+    double eps=1E-9;
+    double x=0.0294;
+    do{
+        x*=(2.0-a*x);
+    }while(fabs(1.0-a*x)>=eps);
+    printf("The Solution for 1/%f is %f",a,x);
+    return EXIT_SUCCESS;
+}
+```
+
+A while true loop which stops at some condition of break
+
+```c
+# include <stdio.h>
+# include <stdlib.h>
+# include <tgmath.h>
+
+int main(void){
+    double a=45;
+    double eps=1E-9;
+    double x=0.0294;
+    while(true){
+        double prod=a*x;
+        if(fabs(1.0-prod)<=eps){
+            break;
+        }
+        x*=(2.0-prod);
+    }
+    printf("The Solution for 1/%f is %f",a,x);
     return EXIT_SUCCESS;
 }
 ```
