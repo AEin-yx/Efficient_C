@@ -396,7 +396,7 @@ int main(void){
 }
 ```
 
-A while true loop which stops at some condition of break
+How to use break
 
 ```c
 # include <stdio.h>
@@ -410,6 +410,33 @@ int main(void){
     while(true){
         double prod=a*x;
         if(fabs(1.0-prod)<=eps){
+            break;
+        }
+        x*=(2.0-prod);
+    }
+    printf("The Solution for 1/%f is %f",a,x);
+    return EXIT_SUCCESS;
+}
+```
+How to use continue
+
+```c
+# include <stdio.h>
+# include <stdlib.h>
+# include <tgmath.h>
+
+int main(void){
+    double a=12;
+    double eps=1E-9;
+    double x=0.0294;
+    int max_iterations=100;
+    for(size_t i=0;i<max_iterations;++i){
+        if(x>1.0){
+            x=1.0/x;
+            continue;
+        }
+        double prod=a*x;
+        if(fabs(1.0-prod)>eps){
             break;
         }
         x*=(2.0-prod);
