@@ -360,3 +360,20 @@ No division needed, just multiplications and subtractions.
         - **`x₁ = 0.02 * (2 - 34 * 0.02) ≈ 0.02 * (2 - 0.68) ≈ 0.0264`**
         - **`x₂ ≈ 0.0264 * (2 - 34 * 0.0264) ≈ 0.0292`**
         - Converges to **`~0.02941176`** (which is **`1/34`**).
+### Heron Approximation using a while loop with a condition
+```
+# include <stdlib.h>
+# include <stdio.h>
+# include <tgmath.h>
+
+int main(void){
+    double eps=1E-9;
+    double a=3.1415;
+    double x=0.2414;
+    while(fabs(1.0-a*x)>=eps){
+        x*=2.0-a*x;
+    }
+    printf("The Approximation of %f is %.10f",a,x);
+    return EXIT_SUCCESS;
+}
+```
